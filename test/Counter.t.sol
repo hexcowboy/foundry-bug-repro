@@ -12,10 +12,19 @@ contract CounterTest is Test {
         counter = new Counter();
     }
 
-    function testFuzzPayable(address[10] memory senders, uint256[10] memory amounts) public {
-        for (uint256 i = 0; i < amounts.length; i++) {
+    uint256 constant LOAD = 10;
+
+    function testFuzzPayable(
+        address[LOAD] memory senders,
+        uint256[LOAD] memory amounts
+    ) public {
+        for (uint256 i = 0; i < LOAD; i++) {
             amounts[i] = bound(amounts[i], 0, 500);
             vm.assume(senders[i] != 0x000000000000000000636F6e736F6c652e6c6f67);
+            vm.assume(senders[i] != 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D);
+            vm.assume(senders[i] != 0x4e59b44847b379578588920cA78FbF26c0B4956C);
+            vm.assume(senders[i] != 0xCe71065D4017F316EC606Fe4422e11eB2c47c246);
+            vm.assume(senders[i] != address(this));
             StdCheatsSafe.assumeNoPrecompiles(senders[i]);
         }
 
